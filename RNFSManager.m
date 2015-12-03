@@ -201,21 +201,29 @@ RCT_EXPORT_METHOD(stopDownload:(nonnull NSNumber *)jobId)
   }
 }
 
+RCT_EXPORT_METHOD(exists:(NSString *)filepath
+                  callback:(RCTResponseSenderBlock)callback)
+{
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filepath];
+    
+    callback(@[[NSNull null], [NSNumber numberWithBool:exists]]);
+}
+
 RCT_EXPORT_METHOD(pathForBundle:(NSString *)bundleNamed
                   callback:(RCTResponseSenderBlock)callback)
 {
     NSString *path = [[NSBundle mainBundle].bundlePath stringByAppendingFormat:@"/%@.bundle", bundleNamed];
     NSBundle *bundle = [NSBundle bundleWithPath:path];
-
+    
     if (!bundle) {
         bundle = [NSBundle bundleForClass:NSClassFromString(bundleNamed)];
         path = bundle.bundlePath;
     }
-
+    
     if (!bundle.isLoaded) {
         [bundle load];
     }
-
+    
     if (path) {
         callback(@[[NSNull null], path]);
     } else {

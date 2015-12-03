@@ -22,6 +22,7 @@ var _unlink = Promise.promisify(RNFSManager.unlink);
 var _mkdir = Promise.promisify(RNFSManager.mkdir);
 var _downloadFile = Promise.promisify(RNFSManager.downloadFile);
 var _pathForBundle = Promise.promisify(RNFSManager.pathForBundle);
+var _exists = Promise.promisify(RNFSManager.exists);
 
 var convertError = (err) => {
   if (err.isOperational && err.cause) {
@@ -172,6 +173,11 @@ var RNFS = {
 
   stopDownload(jobId) {
     RNFSManager.stopDownload(jobId);
+  },
+
+  fileExistsAtPath(filepath) {
+    return _exists(filepath)
+      .catch(convertError);
   },
 
   MainBundlePath: RNFSManager.MainBundlePath,

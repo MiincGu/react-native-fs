@@ -201,6 +201,25 @@ RCT_EXPORT_METHOD(stopDownload:(nonnull NSNumber *)jobId)
   }
 }
 
+RCT_EXPORT_METHOD(exists:(NSString *)filepath
+                  callback:(RCTResponseSenderBlock)callback)
+{
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filepath];
+    
+    callback(@[[NSNull null], [NSNumber numberWithBool:exists]]);
+}
+
+RCT_EXPORT_METHOD(rename:(NSString *)filepath
+                  to:(NSString *)newname
+                  callback:(RCTResponseSenderBlock)callback)
+{
+    NSString *newPath = [filepath.stringByDeletingLastPathComponent stringByAppendingPathComponent:newname];
+    NSError *error = nil;
+    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:filepath toPath:newPath error:&error];
+    
+    callback(@[[NSNull null], [NSNumber numberWithBool:success]]);
+}
+
 RCT_EXPORT_METHOD(pathForBundle:(NSString *)bundleNamed
                   callback:(RCTResponseSenderBlock)callback)
 {

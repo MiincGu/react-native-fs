@@ -161,8 +161,8 @@ RCT_EXPORT_METHOD(downloadFile:(NSString *)urlStr
 
   params.callback = ^(NSNumber* statusCode, NSNumber* bytesWritten) {
     return callback(@[[NSNull null], @{@"jobId": jobId,
-                                       @"statusCode": statusCode,
-                                       @"bytesWritten": bytesWritten}]);
+                                       @"statusCode": (statusCode ? statusCode : [NSNumber numberWithInt:0]),
+                                       @"bytesWritten": (bytesWritten ? bytesWritten : [NSNumber numberWithInt:0])}]);
   };
 
   params.errorCallback = ^(NSError* error) {

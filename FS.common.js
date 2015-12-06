@@ -145,7 +145,7 @@ var RNFS = {
     var subscriptionIos, subscriptionAndroid;
 
     if (!begin) begin = (info) => {
-      console.log('Download begun:', info);
+      // console.log('Download begun:', info);
     };
 
     if (begin) {

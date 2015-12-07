@@ -31,16 +31,6 @@
                                                                  cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                              timeoutInterval:30];
 
-  [[NSFileManager defaultManager] createFileAtPath:_params.toFile contents:nil attributes:nil];
-
-  _fileHandle = [NSFileHandle fileHandleForWritingAtPath:_params.toFile];
-
-  if (!_fileHandle) {
-    NSError* error = [NSError errorWithDomain:@"Downloader" code:NSURLErrorFileDoesNotExist userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat: @"Failed to create target file at path: %@", _params.toFile]}];
-
-    return _params.errorCallback(error);
-  }
-
   _connection = [[NSURLConnection alloc] initWithRequest:downloadRequest delegate:self startImmediately:NO];
 
   [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
@@ -57,6 +47,17 @@
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
+    
+  [[NSFileManager defaultManager] createFileAtPath:_params.toFile contents:nil attributes:nil];
+
+  _fileHandle = [NSFileHandle fileHandleForWritingAtPath:_params.toFile];
+
+  if (!_fileHandle) {
+    NSError* error = [NSError errorWithDomain:@"Downloader" code:NSURLErrorFileDoesNotExist userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat: @"Failed to create  target file at path: %@", _params.toFile]}];
+    
+    return _params.errorCallback(error);
+  }
+    
   NSHTTPURLResponse* httpUrlResponse = (NSHTTPURLResponse*)response;
 
   _statusCode = [NSNumber numberWithLong:httpUrlResponse.statusCode];
